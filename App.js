@@ -1,3 +1,9 @@
+import React from 'react'
 import Main from './src/main'
 
-export default Main
+export default function App() {
+
+  return (
+    <Main/>
+  )
+}

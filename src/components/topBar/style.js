@@ -37,14 +37,14 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '19%',
+    minWidth: '15%'
   },
 
   btnText: {
 
     color: '#757575',
     fontWeight: 'bold',
-    fontSize: 13
+    paddingHorizontal: '1%',
   },
 })
 
