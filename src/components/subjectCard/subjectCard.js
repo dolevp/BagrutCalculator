@@ -75,7 +75,6 @@ renderSplitToggle() {
   return (
     <Body>
       <CheckBox checked={this.state.splitSubject} onPress={this.toggleSplitSubject} color={pink}/>
-
       <Text style={style.splitText}>
          חלוקת 70-30 (הערכה חלופית)
       </Text>

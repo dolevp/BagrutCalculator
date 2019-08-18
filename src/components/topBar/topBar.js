@@ -3,6 +3,8 @@ import { Text, View } from 'react-native';
 import { Picker, Button } from 'native-base';
 import style from './style';
 
+const bagrutReqJson = require("../../data/bagrutReqs.json")
+
 export default class TopBar extends React.Component {
 
 constructor(props){
@@ -10,6 +12,16 @@ constructor(props){
   this.state = {
 
   }
+}
+
+renderSectorButton = (sectorName) => {
+  return (
+    <Button style={style.sectorButton}>
+      <Text style={style.btnText}>
+        {sectorName}
+      </Text>
+    </Button>
+  )
 }
 
   render(){
@@ -23,21 +35,7 @@ constructor(props){
           </Text>
         </View>
         <View style={style.buttonContainer}>
-          <Button rounded style={style.sectorButton}>
-            <Text style={style.btnText}>
-              Hello
-            </Text>
-          </Button>
-          <Button rounded style={style.sectorButton}>
-            <Text style={style.btnText}>
-              Hello
-            </Text>
-          </Button>
-          <Button rounded style={style.sectorButton}>
-            <Text style={style.btnText}>
-              Hello
-            </Text>
-          </Button>
+          {Object.keys(bagrutReqJson.requirements).map((sectorName) => this.renderSectorButton(sectorName))}
         </View>
       </View>
 

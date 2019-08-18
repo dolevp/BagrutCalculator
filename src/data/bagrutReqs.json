@@ -1,0 +1,205 @@
+{
+  "requirements": {
+    "ממלכתי": [
+      {
+        "subjectName": "תנ״ך",
+        "units": 2,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "ספרות",
+        "units": 2,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "היסטוריה",
+        "units": 2,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "עברית",
+        "units": 2,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "אזרחות",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "מתמטיקה",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אנגלית",
+        "units": 3,
+        "splitSubject": false
+      }
+    ],
+    "ממלכתי דתי": [
+      {
+        "subjectName": "תנ״ך",
+        "units": 3,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "ספרות",
+        "units": 1,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "מחשבת ישראל",
+        "units": 1,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "היסטוריה",
+        "units": 2,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "תלמוד ותורה שבעל פה",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "עברית",
+        "units": 2,
+        "splitSubject": true
+      },
+      {
+        "subjectName": "אזרחות",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "מתמטיקה",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אנגלית",
+        "units": 3,
+        "splitSubject": false
+      }
+    ],
+    "ערבי": [
+      {
+        "subjectName": "ערבית",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "עברית",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "היסטוריה",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "תרבות ומורשת איסלאם / מורשת ודת נוצרית",
+        "units": 1,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אזרחות",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "מתמטיקה",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אנגלית",
+        "units": 3,
+        "splitSubject": false
+      }
+    ],
+    "דרוזי": [
+      {
+        "subjectName": "ערבית",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "עברית",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "היסטוריה",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "תרבות ומורשת דרוזית",
+        "units": 1,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אזרחות",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "מתמטיקה",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אנגלית",
+        "units": 3,
+        "splitSubject": false
+      }
+    ],
+    "עצמאי (חרדי)": [
+      {
+        "subjectName": "תנ״ך",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "יהדות",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "היסטוריה",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "עברית",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "ספרות",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אזרחות",
+        "units": 2,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "מתמטיקה",
+        "units": 3,
+        "splitSubject": false
+      },
+      {
+        "subjectName": "אנגלית",
+        "units": 3,
+        "splitSubject": false
+      }
+    ]
+
+  }
+}

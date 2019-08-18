@@ -9,7 +9,7 @@ const style = StyleSheet.create({
     flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center',
-    backgroundColor: lime,
+    backgroundColor: pink,
 
   },
   textContainer: {
@@ -19,7 +19,7 @@ const style = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sectorText: {
-    color: '#212121',
+    color: 'white',
     fontSize: 20,
     marginBottom: '3%',
 
@@ -35,15 +35,16 @@ const style = StyleSheet.create({
   sectorButton: {
 
     backgroundColor: 'white',
-    width: '20%',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '19%',
   },
 
   btnText: {
 
-    color: pink,
+    color: '#757575',
     fontWeight: 'bold',
+    fontSize: 13
   },
 })
 
