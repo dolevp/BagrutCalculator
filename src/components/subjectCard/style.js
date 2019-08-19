@@ -12,6 +12,13 @@ const style = StyleSheet.create({
     fontSize: 20
 
   },
+  toggleContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'flex-end'
+
+  },
   gradeText: {
 
     color: secondaryTextColor,

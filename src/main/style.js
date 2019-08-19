@@ -4,7 +4,7 @@ import React from 'react';
 const style = StyleSheet.create({
   container: {
 
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#F5F5F5',
     flex: 1,
   },
 

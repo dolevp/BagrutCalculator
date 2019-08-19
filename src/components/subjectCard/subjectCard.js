@@ -142,14 +142,15 @@ export default class SubjectCard extends React.Component {
 
   renderSplitToggle() {
     return (
-      <Right style={{ alignItems: "center", justifyContent: "center" }}>
-        <Body>
-          <Text style={style.splitText}> חלוקת 70-30 (הערכה חלופית)</Text>
+      <Right style={style.toggleContainer}>
+        <Body style={style.toggleContainer}>
+          <Text style={style.splitText}>חלוקת 70/30 (הערכה חלופית)</Text>
         </Body>
         <CheckBox
           checked={this.state.splitSubject}
           onPress={this.toggleSplitSubject}
           color={pink}
+          style={{marginEnd: '3%'}}
         />
       </Right>
     );

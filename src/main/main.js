@@ -16,7 +16,6 @@ export default class Main extends React.Component {
     super(props);
     this.state = {
       cards: [],
-      ref: 0
     };
   }
 
@@ -91,4 +90,5 @@ export default class Main extends React.Component {
       </Container>
     );
   }
+
 }
