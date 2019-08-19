@@ -7,6 +7,7 @@ import style from "./style.js";
 import { Feather } from "@expo/vector-icons";
 
 const bagrutReqJson = require("../data/bagrutReqs.json");
+const calcMethodJson = require("../data/calculationMethods.json");
 
 const pink = "#FC3C7D";
 const lime = "#EEFF41";
@@ -16,9 +17,11 @@ export default class Main extends React.Component {
     super(props);
     this.state = {
       cards: [],
+      sector: ""
     };
   }
 
+  calculateAvg() {}
   applySectorSubjects = async sectorName => {
     await this.clearCards();
 
@@ -28,6 +31,7 @@ export default class Main extends React.Component {
       splitSubject: item.splitSubject
     }));
     this.setState({ cards });
+    this.setState({ sector: sectorName });
   };
 
   addEmptyCard = () => {
@@ -40,21 +44,22 @@ export default class Main extends React.Component {
   };
 
   removeCard = card => {
-    let cards = [...this.state.cards];
+    console.log(card.getSubjectName());
     card.hideCard()
+    //card.hideCard()
+    let cards = [...this.state.cards];
     //get index of card to remove
-    let index = -1;
-    for(let i = 0; i < cards.length; i++){
-      if(cards[i].subjectName == card.getSubjectName() && cards[i].units == card.getUnits() && cards[i].splitSubject == card.getSplitSubject()) {
-        index = i;
+    for (let i = cards.length - 1; i >= 0; i--) {
+      if (
+        cards[i].subjectName == card.getSubjectName() &&
+        cards[i].units == card.getUnits() &&
+        cards[i].splitSubject == card.getSplitSubject()
+      ) {
+        cards[i] = "removed";
         break;
       }
     }
-    console.log(index)
-    if (index !== -1) {
-      cards[index].subjectName = "TtTTTTT"
-      this.setState({ cards });
-    }
+    this.setState({ cards }, () => console.log(cards));
   };
 
   render() {
@@ -66,10 +71,12 @@ export default class Main extends React.Component {
         <View style={{ flex: 8 }}>
           <Content>
             {this.state.cards.map(card => {
+              if (card == "removed") {
+                return null;
+              }
               if (card == "default") {
                 return <SubjectCard onCardRemoved={this.removeCard} />;
               }
-              console.log(card.subjectName)
               return (
                 <SubjectCard
                   onCardRemoved={this.removeCard}
@@ -79,10 +86,7 @@ export default class Main extends React.Component {
                 />
               );
             })}
-            <TouchableHighlight
-              style={{ padding: "3%" }}
-              onPress={() => this.addEmptyCard()}
-            >
+            <TouchableHighlight onPress={() => this.addEmptyCard()}>
               <Feather size={30} name="plus-circle" color={pink} />
             </TouchableHighlight>
           </Content>
@@ -90,5 +94,4 @@ export default class Main extends React.Component {
       </Container>
     );
   }
-
 }

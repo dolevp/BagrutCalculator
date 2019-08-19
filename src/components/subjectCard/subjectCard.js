@@ -1,6 +1,6 @@
 import style from "./style";
 import React from "react";
-import { Text, View, TouchableHighlight } from "react-native";
+import { Text, View, TouchableHighlight, Animated } from "react-native";
 import {
   Card,
   Item,
@@ -31,7 +31,8 @@ export default class SubjectCard extends React.Component {
       p30: 0,
       show: true,
       p70: 0,
-      final: 0
+      final: 0,
+      fadeAnim: new Animated.Value(0)
     };
   }
 
@@ -39,6 +40,17 @@ export default class SubjectCard extends React.Component {
     units: 3,
     splitSubject: true
   };
+
+  componentDidMount() {
+    Animated.timing(
+      // Animate over time
+      this.state.fadeAnim, // The animated value to drive
+      {
+        toValue: 1, // Animate to opacity: 1 (opaque)
+        duration: 800 // Make it take a while
+      }
+    ).start(); // Starts the animation
+  }
 
   renderGradeInputs() {
     return (
@@ -101,25 +113,22 @@ export default class SubjectCard extends React.Component {
     );
   }
 
-  getUnits(){
-    return this.state.units
+  getUnits() {
+    return this.state.units;
   }
 
-  getFinalGrade(){
-    return this.state.final
+  getFinalGrade() {
+    return this.state.final;
   }
 
-  getSubjectName(){
-    return this.state.subjectName
+  getSubjectName() {
+    return this.state.subjectName;
   }
 
-  getSplitSubject(){
-    return this.state.splitSubject
+  getSplitSubject() {
+    return this.state.splitSubject;
   }
 
-  hideCard(){
-    this.setState({show: false})
-  }
   renderUnitSelection() {
     return (
       <View style={style.unitView}>
@@ -143,15 +152,15 @@ export default class SubjectCard extends React.Component {
   renderSplitToggle() {
     return (
       <Right style={style.toggleContainer}>
-        <Body style={style.toggleContainer}>
-          <Text style={style.splitText}>חלוקת 70/30 (הערכה חלופית)</Text>
-        </Body>
         <CheckBox
           checked={this.state.splitSubject}
           onPress={this.toggleSplitSubject}
-          color={pink}
-          style={{marginEnd: '3%'}}
+          color={lime}
+          style={{ marginEnd: "3%" }}
         />
+        <Body style={style.toggleContainer}>
+          <Text style={style.splitText}>חלוקת 70/30 (הערכה חלופית)</Text>
+        </Body>
       </Right>
     );
   }
@@ -163,50 +172,68 @@ export default class SubjectCard extends React.Component {
       });
   }
 
+  hideCard = () => {
+    this.setState({ show: false });
+  };
+
   toggleSplitSubject = () => {
     this.setState({ splitSubject: !this.state.splitSubject });
   };
 
   removeCard = () => {
-    this.props.onCardRemoved(this);
+    Animated.timing(
+      // Animate over time
+      this.state.fadeAnim, // The animated value to drive
+      {
+        toValue: 0,
+        duration: 700 // Make it take a while
+      }
+    ).start(() => {
+      this.props.onCardRemoved(this);
+    });
+    //this.props.onCardRemoved(this);
   };
 
   render() {
-    if(this.state.show) {
+    let { fadeAnim } = this.state;
+
+    if (this.state.show) {
       return (
-        <Card>
-          <CardItem header>
-            <Item underline>
-              <Input
-                style={style.subjectNameText}
-                textAlign={"right"}
-                placeholder="שם המקצוע"
-                onChangeText={text => this.setState({ subjectName: text })}
-                value={this.state.subjectName}
-                autoCapitalize="none"
-              />
-            </Item>
-          </CardItem>
+        <Animated.View style={{ opacity: fadeAnim }}>
+          <Card>
+            <CardItem header>
+              <Item underline>
+                <Input
+                  style={style.subjectNameText}
+                  textAlign={"right"}
+                  placeholder="שם המקצוע"
+                  onChangeText={text => this.setState({ subjectName: text })}
+                  value={this.props.subjectName}
+                  autoCapitalize="none"
+                />
+              </Item>
+            </CardItem>
 
-          <CardItem>
-            <Left>{this.renderSplitToggle()}</Left>
-          </CardItem>
+            <CardItem>{this.renderSplitToggle()}</CardItem>
 
-          <CardItem>
-            <Left style={style.left}>{this.renderUnitSelection()}</Left>
-            <Right style={style.right}>{this.renderGradeInputs()}</Right>
-          </CardItem>
+            <CardItem>
+              <Left style={style.left}>{this.renderUnitSelection()}</Left>
+              <Right style={style.right}>{this.renderGradeInputs()}</Right>
+            </CardItem>
 
-          <CardItem footer>
-            <TouchableHighlight onPress={() => this.removeCard()}>
-              <EvilIcons name="trash" size={35} color={pink} />
-            </TouchableHighlight>
-          </CardItem>
-        </Card>
+            <CardItem footer style={style.cardFooter}>
+              <TouchableHighlight
+                onPress={() => {
+                  if (this.state.show) this.removeCard();
+                }}
+              >
+                <EvilIcons name="trash" size={35} color={pink} />
+              </TouchableHighlight>
+            </CardItem>
+          </Card>
+        </Animated.View>
       );
     }
-    return null
-
-
+    return null;
   }
 }

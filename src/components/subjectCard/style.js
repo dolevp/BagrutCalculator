@@ -16,7 +16,7 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'flex-end'
+    justifyContent:'flex-start'
 
   },
   gradeText: {
@@ -66,6 +66,9 @@ const style = StyleSheet.create({
     flex: 1,
 
 
+  },
+  cardFooter: {
+    justifyContent: 'flex-end'
   },
   finalGradeView: {
 
