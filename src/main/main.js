@@ -19,7 +19,6 @@ export default class Main extends React.Component {
       cards: [],
       sector: ""
     };
-    this.calculateAvg();
   }
 
   calculateAvg() {
@@ -29,13 +28,12 @@ export default class Main extends React.Component {
       var schoolObject = school[Object.keys(school)[0]];
 
       for (card of this.state.cards) {
-        if (card == "removed" || card == "default") {
+        if (card == "removed") {
           continue;
         }
-        console.log(card.final)
+        console.log(this.state.cards);
         totalUnits += card.units;
-
-        if (schoolObject.hasOwnProperty(card.units)) {
+        if (schoolObject.hasOwnProperty(card.units.toString())) {
           if (
             schoolObject[card.units.toString()].hasOwnProperty(
               card.subjectName
@@ -54,17 +52,20 @@ export default class Main extends React.Component {
             sumGrades +=
               (card.final +
                 schoolObject[card.units.toString()][
-                  card.subjectName + " " + this.statesector
+                  card.subjectName + " " + this.state.sector
                 ]) *
               card.units;
+          }
+          else {
+            sumGrades += (card.final + schoolObject[card.units.toString()]["other"]) * card.units
           }
         } else {
           sumGrades += card.final * card.units;
         }
       }
-      console.log(sumGrades)
-      console.log(totalUnits)
-      return sumGrades / totalUnits;
+      console.log(sumGrades);
+      console.log(totalUnits);
+      return (sumGrades / totalUnits) > schoolObject.maxAvg ? schoolObject.maxAvg : sumGrades / totalUnits;
     });
     return grades;
   }
@@ -83,7 +84,10 @@ export default class Main extends React.Component {
   };
 
   addEmptyCard = () => {
-    let cards = [...this.state.cards, "default"];
+    let cards = [
+      ...this.state.cards,
+      { subjectName: "", final: 0, units: 3, splitSubject: true }
+    ];
     this.setState({ cards }, () => setTimeout(this.scrollToBottom, 100));
   };
 
@@ -102,10 +106,6 @@ export default class Main extends React.Component {
       sum += cards[i].units;
     }
     return sum;
-  };
-
-  onFinalChanged = (card, value) => {
-    card.final = value;
   };
 
   removeCard = card => {
@@ -128,18 +128,8 @@ export default class Main extends React.Component {
               if (card == "removed") {
                 return null;
               }
-              if (card == "default") {
-                return (
-                  <SubjectCard
-                    dataCard={card}
-                    onFinalChanged={this.onFinalChanged}
-                    onCardRemoved={this.removeCard}
-                  />
-                );
-              }
               return (
                 <SubjectCard
-                  onFinalChanged={this.onFinalChanged}
                   dataCard={card}
                   onCardRemoved={this.removeCard}
                   subjectName={card.subjectName}

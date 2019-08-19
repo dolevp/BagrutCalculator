@@ -52,10 +52,6 @@ export default class SubjectCard extends React.Component {
     ).start(); // Starts the animation
   }
 
-  onFinalChanged = () => {
-    this.props.onFinalChanged(this.props.dataCard, this.state.final);
-  };
-
   renderGradeInputs() {
     return (
       <View style={style.gradeView}>
@@ -65,12 +61,14 @@ export default class SubjectCard extends React.Component {
               <Input
                 style={style.gradeText}
                 textAlign={"center"}
+                maxLength={3}
                 placeholderTextColor="#757575"
                 keyboardType="number-pad"
                 value={this.state.p30 == 0 ? "" : this.state.p30.toString()}
                 onChangeText={text => {
                   this.setState({ p30: text }, () => {
                     this.handleMiniGradeChange();
+
                   });
                 }}
                 placeholder={"ציון 30%"}
@@ -82,6 +80,7 @@ export default class SubjectCard extends React.Component {
                 style={style.gradeText}
                 placeholderTextColor="#757575"
                 textAlign={"center"}
+                maxLength={3}
                 keyboardType="number-pad"
                 value={this.state.p70 == 0 ? "" : this.state.p70.toString()}
                 onChangeText={text => {
@@ -99,14 +98,15 @@ export default class SubjectCard extends React.Component {
           <Input
             style={style.gradeText}
             textAlign={"center"}
+            maxLength={3}
             placeholderTextColor="#757575"
             keyboardType="number-pad"
             value={this.state.final == 0 ? "" : this.state.final.toString()}
             onChangeText={text => {
               this.setState({ final: text }, () => {
-                this.onFinalChanged();
                 this.setState({ p30: 0 });
                 this.setState({ p70: 0 });
+                this.props.dataCard.final = parseInt(text)
               });
             }}
             placeholder={"ציון סופי"}
@@ -143,7 +143,10 @@ export default class SubjectCard extends React.Component {
           textColor={pink}
           iconStyle={{ color: pink }}
           editable={false}
-          onChange={value => this.setState({ units: value })}
+          onChange={value => {
+            this.setState({ units: value });
+            this.props.dataCard.units = value
+          }}
           value={this.state.units}
           minValue={1}
           maxValue={5}
@@ -171,12 +174,9 @@ export default class SubjectCard extends React.Component {
 
   handleMiniGradeChange() {
     if (this.state.p30 != 0 && this.state.p70 != 0)
-      this.setState(
-        {
-          final: Math.round(0.3 * this.state.p30 + 0.7 * this.state.p70)
-        },
-        () => this.onFinalChanged()
-      );
+      this.setState({
+        final: Math.round(0.3 * this.state.p30 + 0.7 * this.state.p70)
+      }, () => this.props.dataCard.final = this.state.final);
   }
 
   hideCard = () => {
@@ -184,7 +184,7 @@ export default class SubjectCard extends React.Component {
   };
 
   toggleSplitSubject = () => {
-    this.setState({ splitSubject: !this.state.splitSubject });
+    this.setState({ splitSubject: !this.state.splitSubject }, () => this.props.dataCard.splitSubject = this.state.splitSubject);
   };
 
   removeCard = () => {
@@ -214,8 +214,11 @@ export default class SubjectCard extends React.Component {
                   style={style.subjectNameText}
                   textAlign={"right"}
                   placeholder="שם המקצוע"
-                  onChangeText={text => this.setState({ subjectName: text })}
-                  value={this.props.subjectName}
+                  onChangeText={text => {
+                    this.setState({ subjectName: text });
+                    this.props.dataCard.subjectName = text
+                  }}
+                  value={this.state.subjectName}
                   autoCapitalize="none"
                 />
               </Item>
