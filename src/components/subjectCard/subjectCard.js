@@ -47,10 +47,14 @@ export default class SubjectCard extends React.Component {
       this.state.fadeAnim, // The animated value to drive
       {
         toValue: 1, // Animate to opacity: 1 (opaque)
-        duration: 800 // Make it take a while
+        duration: 700 // Make it take a while
       }
     ).start(); // Starts the animation
   }
+
+  onFinalChanged = () => {
+    this.props.onFinalChanged(this.props.dataCard, this.state.final);
+  };
 
   renderGradeInputs() {
     return (
@@ -67,7 +71,6 @@ export default class SubjectCard extends React.Component {
                 onChangeText={text => {
                   this.setState({ p30: text }, () => {
                     this.handleMiniGradeChange();
-                    console.log(this.state.p30);
                   });
                 }}
                 placeholder={"ציון 30%"}
@@ -82,9 +85,9 @@ export default class SubjectCard extends React.Component {
                 keyboardType="number-pad"
                 value={this.state.p70 == 0 ? "" : this.state.p70.toString()}
                 onChangeText={text => {
-                  this.setState({ p70: text }, () =>
-                    this.handleMiniGradeChange()
-                  );
+                  this.setState({ p70: text }, () => {
+                    this.handleMiniGradeChange();
+                  });
                 }}
                 placeholder={"ציון 70%"}
                 autoCapitalize="none"
@@ -101,6 +104,7 @@ export default class SubjectCard extends React.Component {
             value={this.state.final == 0 ? "" : this.state.final.toString()}
             onChangeText={text => {
               this.setState({ final: text }, () => {
+                this.onFinalChanged();
                 this.setState({ p30: 0 });
                 this.setState({ p70: 0 });
               });
@@ -142,7 +146,7 @@ export default class SubjectCard extends React.Component {
           onChange={value => this.setState({ units: value })}
           value={this.state.units}
           minValue={1}
-          maxValue={15}
+          maxValue={5}
           type="plus-minus"
         />
       </View>
@@ -155,7 +159,7 @@ export default class SubjectCard extends React.Component {
         <CheckBox
           checked={this.state.splitSubject}
           onPress={this.toggleSplitSubject}
-          color={lime}
+          color={pink}
           style={{ marginEnd: "3%" }}
         />
         <Body style={style.toggleContainer}>
@@ -167,9 +171,12 @@ export default class SubjectCard extends React.Component {
 
   handleMiniGradeChange() {
     if (this.state.p30 != 0 && this.state.p70 != 0)
-      this.setState({
-        final: Math.round(0.3 * this.state.p30 + 0.7 * this.state.p70)
-      });
+      this.setState(
+        {
+          final: Math.round(0.3 * this.state.p30 + 0.7 * this.state.p70)
+        },
+        () => this.onFinalChanged()
+      );
   }
 
   hideCard = () => {
@@ -189,7 +196,7 @@ export default class SubjectCard extends React.Component {
         duration: 700 // Make it take a while
       }
     ).start(() => {
-      this.props.onCardRemoved(this);
+      this.props.onCardRemoved(this.props.dataCard);
     });
     //this.props.onCardRemoved(this);
   };
@@ -224,7 +231,7 @@ export default class SubjectCard extends React.Component {
             <CardItem footer style={style.cardFooter}>
               <TouchableHighlight
                 onPress={() => {
-                  if (this.state.show) this.removeCard();
+                  this.removeCard();
                 }}
               >
                 <EvilIcons name="trash" size={35} color={pink} />

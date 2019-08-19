@@ -37,7 +37,7 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: '15%'
+    minWidth: '16%',
   },
 
   btnText: {

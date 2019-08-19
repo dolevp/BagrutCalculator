@@ -19,14 +19,62 @@ export default class Main extends React.Component {
       cards: [],
       sector: ""
     };
+    this.calculateAvg();
   }
 
-  calculateAvg() {}
+  calculateAvg() {
+    let totalUnits = 0;
+    let sumGrades = 0;
+    let grades = calcMethodJson.schools.map(school => {
+      var schoolObject = school[Object.keys(school)[0]];
+
+      for (card of this.state.cards) {
+        if (card == "removed" || card == "default") {
+          continue;
+        }
+        console.log(card.final)
+        totalUnits += card.units;
+
+        if (schoolObject.hasOwnProperty(card.units)) {
+          if (
+            schoolObject[card.units.toString()].hasOwnProperty(
+              card.subjectName
+            ) &&
+            card.final >= schoolObject.bonusMin
+          ) {
+            sumGrades +=
+              (card.final +
+                schoolObject[card.units.toString()][card.subjectName]) *
+              card.units;
+          } else if (
+            schoolObject[card.units.toString()].hasOwnProperty(
+              card.subjectName + " " + this.state.sector
+            )
+          ) {
+            sumGrades +=
+              (card.final +
+                schoolObject[card.units.toString()][
+                  card.subjectName + " " + this.statesector
+                ]) *
+              card.units;
+          }
+        } else {
+          sumGrades += card.final * card.units;
+        }
+      }
+      console.log(sumGrades)
+      console.log(totalUnits)
+      return sumGrades / totalUnits;
+    });
+    return grades;
+  }
+
   applySectorSubjects = async sectorName => {
     await this.clearCards();
 
     let cards = bagrutReqJson.requirements[sectorName].map(item => ({
       subjectName: item.subjectName,
+      final: 0,
       units: item.units,
       splitSubject: item.splitSubject
     }));
@@ -36,28 +84,34 @@ export default class Main extends React.Component {
 
   addEmptyCard = () => {
     let cards = [...this.state.cards, "default"];
-    this.setState({ cards });
+    this.setState({ cards }, () => setTimeout(this.scrollToBottom, 100));
   };
 
   clearCards = async () => {
     this.setState({ cards: [] });
   };
 
-  removeCard = card => {
-    console.log(card.getSubjectName());
-    card.hideCard()
-    //card.hideCard()
+  scrollToBottom = () => {
+    this._contentScroll._root.scrollToEnd();
+  };
+
+  getSumUnits = () => {
     let cards = [...this.state.cards];
-    //get index of card to remove
-    for (let i = cards.length - 1; i >= 0; i--) {
-      if (
-        cards[i].subjectName == card.getSubjectName() &&
-        cards[i].units == card.getUnits() &&
-        cards[i].splitSubject == card.getSplitSubject()
-      ) {
-        cards[i] = "removed";
-        break;
-      }
+    let sum = 0;
+    for (var i = 0; i < cards.length; i++) {
+      sum += cards[i].units;
+    }
+    return sum;
+  };
+
+  onFinalChanged = (card, value) => {
+    card.final = value;
+  };
+
+  removeCard = card => {
+    let cards = [...this.state.cards];
+    for (let i = 0; i < cards.length; i++) {
+      if (card == cards[i]) cards[i] = "removed";
     }
     this.setState({ cards }, () => console.log(cards));
   };
@@ -69,16 +123,24 @@ export default class Main extends React.Component {
           <TopBar onSectorChanged={this.applySectorSubjects} />
         </View>
         <View style={{ flex: 8 }}>
-          <Content>
+          <Content ref={contentScroll => (this._contentScroll = contentScroll)}>
             {this.state.cards.map(card => {
               if (card == "removed") {
                 return null;
               }
               if (card == "default") {
-                return <SubjectCard onCardRemoved={this.removeCard} />;
+                return (
+                  <SubjectCard
+                    dataCard={card}
+                    onFinalChanged={this.onFinalChanged}
+                    onCardRemoved={this.removeCard}
+                  />
+                );
               }
               return (
                 <SubjectCard
+                  onFinalChanged={this.onFinalChanged}
+                  dataCard={card}
                   onCardRemoved={this.removeCard}
                   subjectName={card.subjectName}
                   units={card.units}
@@ -88,6 +150,11 @@ export default class Main extends React.Component {
             })}
             <TouchableHighlight onPress={() => this.addEmptyCard()}>
               <Feather size={30} name="plus-circle" color={pink} />
+            </TouchableHighlight>
+            <TouchableHighlight
+              onPress={() => console.log(this.calculateAvg())}
+            >
+              <Feather size={30} name="feather" color={pink} />
             </TouchableHighlight>
           </Content>
         </View>
