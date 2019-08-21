@@ -21,18 +21,41 @@ export default class Main extends React.Component {
     };
   }
 
-  calculateAvg() {
-    let totalUnits = 0;
-    let sumGrades = 0;
-    let grades = calcMethodJson.schools.map(school => {
-      var schoolObject = school[Object.keys(school)[0]];
+  compare(a, b) {
+    if (a.final * a.units > b.final * b.units) {
+      return -1;
+    } else if (b.final * b.units > a.final * a.units) {
+      return 1;
+    }
+    return 0;
+  }
 
-      for (card of this.state.cards) {
+  getTotalUnits() {
+    let sum = 0;
+    for (card of this.state.cards) {
+      if (card == "removed") {
+        continue;
+      }
+      sum += card.units;
+    }
+    return sum;
+  }
+
+  getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
+
+  calculateAvg() {
+    let totalUnits = this.getTotalUnits();
+    let sumGrades = 0;
+    let amountToAdd = 0;
+    let sortedCards = this.state.cards.sort(this.compare);
+    let grades = Object.keys(calcMethodJson.schools).map(schoolName => {
+      let schoolObject = calcMethodJson.schools[schoolName];
+      for (card of sortedCards) {
         if (card == "removed") {
           continue;
         }
-        console.log(this.state.cards);
-        totalUnits += card.units;
         if (schoolObject.hasOwnProperty(card.units.toString())) {
           if (
             schoolObject[card.units.toString()].hasOwnProperty(
@@ -40,7 +63,7 @@ export default class Main extends React.Component {
             ) &&
             card.final >= schoolObject.bonusMin
           ) {
-            sumGrades +=
+            amountToAdd =
               (card.final +
                 schoolObject[card.units.toString()][card.subjectName]) *
               card.units;
@@ -49,30 +72,63 @@ export default class Main extends React.Component {
               card.subjectName + " " + this.state.sector
             )
           ) {
-            sumGrades +=
+            amountToAdd =
               (card.final +
                 schoolObject[card.units.toString()][
                   card.subjectName + " " + this.state.sector
                 ]) *
               card.units;
-          }
-          else {
-            sumGrades += (card.final + schoolObject[card.units.toString()]["other"]) * card.units
+          } else {
+            amountToAdd =
+              (card.final + schoolObject[card.units.toString()]["other"]) *
+              card.units;
           }
         } else {
-          sumGrades += card.final * card.units;
+          amountToAdd = card.final * card.units;
+        }
+
+        if (
+          sumGrades > 0 &&
+          this.subjectNotInSector(card.subjectName, this.state.sector) &&
+          (sumGrades + amountToAdd) / totalUnits <
+            sumGrades / (totalUnits - card.units)
+        ) {
+          //ignore this card, it lowers the average
+          totalUnits -= card.units;
+        } else {
+          sumGrades += amountToAdd;
         }
       }
-      console.log(sumGrades);
-      console.log(totalUnits);
-      return (sumGrades / totalUnits) > schoolObject.maxAvg ? schoolObject.maxAvg : sumGrades / totalUnits;
+
+      return sumGrades / totalUnits > schoolObject.maxAvg
+        ? { [schoolName]: schoolObject.maxAvg }
+        : { [schoolName]: parseFloat(sumGrades / totalUnits).toFixed(3) };
     });
     return grades;
   }
 
+  subjectNotInSector(subject, sectorName) {
+    if (!this.state.sector) {
+      console.log("no sector");
+      return true;
+    }
+    for (item of bagrutReqJson.requirements[sectorName]) {
+      console.log(item.subjectName);
+      if (item.subjectName == subject) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   applySectorSubjects = async sectorName => {
+
+
     await this.clearCards();
 
+    if (Object.keys(bagrutReqJson.requirements[sectorName]).length === 1) {
+      return;
+    }
     let cards = bagrutReqJson.requirements[sectorName].map(item => ({
       subjectName: item.subjectName,
       final: 0,
